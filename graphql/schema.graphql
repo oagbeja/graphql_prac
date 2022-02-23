@@ -17,6 +17,10 @@ type Query {
       "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
       name: String @where(operator: "like")
     ): [User!]! @paginate(defaultCount: 10)
+
+    profiles: [Profile!]! @all
+
+    profile(id: Int! @eq): Profile @find
 }
 
 "Account of a person who utilizes this application."
@@ -38,4 +42,28 @@ type User {
 
     "When the account was last updated."
     updated_at: DateTime!
+}
+
+type Profile {
+  id: ID!
+  userName: String!
+  email: String!
+  courses: [CourseReg!]! @hasMany
+  role: Role! @belongsTo
+  
+}
+
+type Role {
+  roleDesc: String
+}
+
+type CourseReg {
+  id:ID!  
+  course: Course! @belongsTo
+  profile: Profile @belongsTo
+}
+
+type Course {  
+  courseDesc: String!
+  enrolled: [CourseReg!]! @hasMany
 }
